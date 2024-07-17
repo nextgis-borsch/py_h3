@@ -1,1 +1,1 @@
-# py_h3
+## Hierarchical hexagonal geospatial indexing system.
