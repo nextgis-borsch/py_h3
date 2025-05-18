@@ -58,9 +58,10 @@ file(DOWNLOAD "https://pypi.python.org/pypi/${PROJECT_NAME}/json" "${CMAKE_CURRE
 
 include(util)
 get_compiler_version(COMPILER)
-# get version and download url
+
+set(VERSION_MAX "3.7.7")
 execute_process(COMMAND ${PYTHON_EXECUTABLE}
-    ${CMAKE_SOURCE_DIR}/cmake/pypi_process.py ${PLUGIN} ${CMAKE_CURRENT_BINARY_DIR}/meta.json ${COMPILER}
+    ${CMAKE_SOURCE_DIR}/cmake/pypi_process.py ${PLUGIN} ${CMAKE_CURRENT_BINARY_DIR}/meta.json ${COMPILER} ${VERSION_MAX}
     OUTPUT_VARIABLE PACKAGE_DETAILS
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
@@ -87,6 +88,19 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${OUT_DIR_NAME})
     status_message("Extract ${CMAKE_CURRENT_BINARY_DIR}/${OUT_NAME}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${CMAKE_CURRENT_BINARY_DIR}/${OUT_NAME})
 endif()
+
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeLists.txt.cy.in
+    ${OUT_DIR_NAME}/src/h3/_cy/CMakeLists.txt
+    @ONLY
+)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeLists.txt.in
+    ${OUT_DIR_NAME}/CMakeLists.txt
+    @ONLY
+)
+
 
 set(PY_H3_PROJECT py_h3)
 include(ExternalProject)
